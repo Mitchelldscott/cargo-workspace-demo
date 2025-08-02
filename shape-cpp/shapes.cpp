@@ -34,18 +34,6 @@ struct Point2D : public Vertex {
     double y() const override {
         return coords[1];
     }
-
-    // For printing (optional, but good for debugging)
-    friend std::ostream& operator<<(std::ostream& os, const Point2D& p) {
-        os << "Point2D([" << p.coords[0] << ", " << p.coords[1] << "])";
-        return os;
-    }
-
-    // Equality operator for Point2D (optional, but good for testing)
-    bool operator==(const Point2D& other) const {
-        return std::abs(coords[0] - other.coords[0]) < EPSILON &&
-               std::abs(coords[1] - other.coords[1]) < EPSILON;
-    }
 };
 
 // Interface for Polygon (mimics Rust's Polygon trait)
@@ -102,11 +90,8 @@ struct CCWNgon : public Polygon {
 
     // Constructor takes a vector of points
     CCWNgon(const std::vector<Point2D>& pts) : points(pts) {
-        if (points.size() < 3) {
-            // Handle error or throw exception for invalid polygon
+        if (points.size() < 3)
             std::cerr << "Error: CCWNgon must have at least 3 points." << std::endl;
-            // Optionally throw std::invalid_argument("CCWNgon must have
-        }
     }
 
     std::vector<Point2D> vertices() const override {
@@ -125,7 +110,6 @@ int main() {
     );
     // Area of a right triangle with base 1, height 1 is 0.5
     assert(std::abs(triangle.area() - 0.5) < EPSILON);
-    std::cout << "Triangle area: " << triangle.area() << " (Correct: 0.5)" << std::endl;
 
     // Test Square
     Square square(
@@ -136,7 +120,6 @@ int main() {
     );
     // Area of a square with side length 1 is 1.0
     assert(std::abs(square.area() - 1.0) < EPSILON);
-    std::cout << "Square area: " << square.area() << " (Correct: 1.0)" << std::endl;
 
     // Test CCWNgon
     CCWNgon ngon({
@@ -151,9 +134,6 @@ int main() {
     });
     // As calculated previously, with these specific points, the Shoelace area is 0.5
     assert(std::abs(ngon.area() - 0.5) < EPSILON);
-    std::cout << "CCWNgon area: " << ngon.area() << " (Correct: 0.5)" << std::endl;
-
-    std::cout << "All assertions passed!" << std::endl;
 
     return 0;
 }

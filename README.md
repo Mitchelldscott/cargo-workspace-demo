@@ -1,15 +1,16 @@
 # cargo-workspace-demo
-A demo of the different features Cargo and Rust offer for embedded projects
 
+A demo of the different features Cargo and Rust offer for embedded projects.
 _This is not a resource for learning Rust/Cargo; it is meant to demonstrate useful features_
-
 
 ## Creating a cargo project
 
 ```bash
 cargo new --lib project_name
 ```
+
 Will create the following files
+
 ```text
 project_name/
 ├── Cargo.toml
@@ -23,7 +24,8 @@ project_name/
 
 ### Login to crates.io
 
-You only need to do this once.
+You only need to do this once:
+
 1. Go to [crates.io](https://crates.io/) and log in with your GitHub account.
 2. Navigate to Account Settings > API Tokens.
 3. Generate a new token. You can leave the scopes as default.
@@ -37,6 +39,7 @@ cargo login
 ### Dry Run (Recommended to test things)
 
 Before you publish for real, perform a dry run. This checks for any packaging errors without actually uploading the crate.
+
 ```bash
 cargo publish --dry-run
 ```
@@ -46,14 +49,15 @@ Cargo will verify your `Cargo.toml` metadata and package your files, reporting a
 ### Publish for Real
 
 If the dry run was successful, you're ready to publish.
+
 ```bash
 cargo publish
 ```
 
-Your crate will be compiled, packaged and uploaded to crates.io. It might take a few minutes for the crate to be 
+Your crate will be compiled, packaged and uploaded to crates.io. It might take a few minutes for the crate to be
 indexed and for documentation to appear on [docs.rs](https://docs.rs/).
 
-To update publish a new version update the `version` value in the `Cargo.toml`. Make sure to follow the 
+To update publish a new version update the `version` value in the `Cargo.toml`. Make sure to follow the
 [SemVer Rules](https://doc.rust-lang.org/cargo/reference/semver.html).
 
 ## Useful Cargo Commands
@@ -68,51 +72,57 @@ To update publish a new version update the `version` value in the `Cargo.toml`. 
 Cargo provides multiple ways to test code: unit, integration, and doc tests.
 
 Run all functions marked with `#[test]` in the crate:
+
 ```bash
-cd polygon-rs
+cd shape-rs
 cargo test
 ```
+
 ```text
-   Compiling polygon-rs v0.1.0 (~/cargo-workspace-demo/polygon-rs)
+   Compiling shape-rs v0.1.0 (~/cargo-workspace-demo/shape-rs)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
-     Running unittests src/lib.rs (~/cargo-workspace-demo/target/debug/deps/polygon_rs-583931035fc61bbb)
+     Running unittests src/lib.rs (~/cargo-workspace-demo/target/debug/deps/shape_rs-583931035fc61bbb)
 
 running 1 test
 test ngon_test::ccw_vs_cw ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-   Doc-tests polygon_rs
+   Doc-tests shape_rs
 
 running 1 test
-test polygon-rs/src/lib.rs - Vertex (line 11) ... ok
+test shape-rs/src/lib.rs - Vertex (line 11) ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
 Or run individual tests
+
 ```bash
-cd polygon-rs
+cd shape-rs
 cargo test --doc
 ```
+
 ```text
-Compiling polygon-rs v0.1.0 (~/cargo-workspace-demo/polygon-rs)
+Compiling shape-rs v0.1.0 (~/cargo-workspace-demo/shape-rs)
 Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
-Doc-tests polygon_rs
+Doc-tests shape_rs
 
 running 1 test
-test polygon-rs/src/lib.rs - Vertex (line 11) ... ok
+test shape-rs/src/lib.rs - Vertex (line 11) ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
+
 ```bash
-cd polygon-rs
+cd shape-rs
 cargo test ngon_test
 ```
+
 ```text
-   Compiling polygon-rs v0.1.0 (~/cargo-workspace-demo/polygon-rs)
+   Compiling shape-rs v0.1.0 (~/cargo-workspace-demo/shape-rs)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
-     Running unittests src/lib.rs (~/cargo-workspace-demo/target/debug/deps/polygon_rs-583931035fc61bbb)
+     Running unittests src/lib.rs (~/cargo-workspace-demo/target/debug/deps/shape_rs-583931035fc61bbb)
 
 running 1 test
 test ngon_test::ccw_vs_cw ... ok
@@ -120,12 +130,12 @@ test ngon_test::ccw_vs_cw ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
-
 ### Build Documentation
 
 Build the docs and open in the default browser:
+
 ```bash
-cd polygon-rs
+cd shape-rs
 cargo doc --open
 ```
 
@@ -136,11 +146,13 @@ cargo doc --open
 [`rustfmt` github repo](https://github.com/rust-lang/rustfmt)
 
 Format all source code:
+
 ```bash
 cargo fmt
 ```
 
-Check if code is formatted properly
+Check if code is formatted properly:
+
 ```bash
 cargo fmt -- --check
 ```
@@ -148,18 +160,21 @@ cargo fmt -- --check
 ### Build and Run Code
 
 Run the current package:
+
 ```bash
 cargo run
 ```
 
 Run an Example:
+
 ```bash
-cargo run -p polygon-rs --example polygon
+cargo run -p shape-rs --example shapes
 ```
+
 ```text
-   Compiling polygon-rs v0.1.0 (~/cargo-workspace-demo/polygon-rs)
+   Compiling shape-rs v0.1.0 (~/cargo-workspace-demo/shape-rs)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.13s
-     Running `~/cargo-workspace-demo/target/debug/examples/polygon`
+     Running `~/cargo-workspace-demo/target/debug/examples/shapes`
 ```
 
 ### Configure Cargo
@@ -167,24 +182,22 @@ cargo run -p polygon-rs --example polygon
 [Cargo Configuration](https://doc.rust-lang.org/cargo/reference/config.html) allows setting aliases for cargo.
 
 Add this to `.cargo/config.toml`:
+
 ```toml
 [alias]
-polygon = "run -p polygon-rs --example polygon"
-pr = "run -p polygon-rs --example polygon --release"
-ptest = "test -p polygon-rs ngon"
+shapes = "run -p shape-rs --example shapes"
+pr = "run -p shape-rs --example shapes --release"
+ptest = "test -p shape-rs ngon"
 ```
 
 ```bash
-cargo polygon
+cargo shapes
 ```
+
 ```text
-   Compiling polygon-rs v0.1.0 (~/cargo-workspace-demo/polygon-rs)
+   Compiling shape-rs v0.1.0 (~/cargo-workspace-demo/shape-rs)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s
-     Running `~/cargo-workspace-demo/target/debug/examples/polygon`
+     Running `~/cargo-workspace-demo/target/debug/examples/shapes`
 ```
 
 ## XTasks Instead of scripts
-
-
-
-

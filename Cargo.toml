@@ -5,6 +5,13 @@ edition = "2024"
 
 [workspace]
 members = [
-    "polygon-rs",
+    "shape-rs",
     "xtask"
 ]
+
+[profile.release]
+debug = false
+opt-level = 3               # Use slightly better optimizations.
+strip = "debuginfo"
+overflow-checks = false     # Disable integer overflow checks.
+debug-assertions = false

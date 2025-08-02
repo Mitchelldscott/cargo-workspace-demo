@@ -1,4 +1,4 @@
-use polygon_rs::{Polygon, Vertex};
+use shape_rs::{Polygon, Vertex};
 
 /// A simple struct representing a point in 2D space.
 #[repr(transparent)]
@@ -63,7 +63,7 @@ fn main() {
         Point2D([1.0, 1.0]),
         Point2D([0.5, 0.75]),
         Point2D([0.0, 1.0]),
-        Point2D([0.25, 5.0]),
+        Point2D([0.25, 0.5]),
     ]);
     // >>> 0.5 * 0.25
     // 0.125

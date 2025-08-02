@@ -1,4 +1,5 @@
 [alias]
-polygon = "run -p polygon-rs --example polygon"
-pr = "run -p polygon-rs --example polygon --release"
-ptest = "test -p polygon-rs ngon"
+shapes = "run -p shape-rs --example shapes"
+pr = "run -p shape-rs --example shapes --release"
+ptest = "test -p shape-rs ngon"
+asm = "objdump -p shape-rs --release --example shapes -- -d --no-show-raw-insn"

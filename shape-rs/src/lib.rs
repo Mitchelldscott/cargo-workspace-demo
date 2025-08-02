@@ -31,13 +31,11 @@ pub trait Polygon<V: Vertex> {
 
         // Apply the Shoelace formula.
         // https://mathworld.wolfram.com/ShoelaceFormula.html
-        let (sum1, sum2) = (0..vertices.len())
+        (0..vertices.len())
             .map(|i| (&vertices[i], &vertices[(i + 1) % vertices.len()]))
-            .fold((0.0, 0.0), |(acc1, acc2), (v1, v2)| {
-                (acc1 + (v1.x() * v2.y()), acc2 + (v1.y() * v2.x()))
-            });
-
-        0.5 * (sum1 - sum2).abs()
+            .fold(0.0, |acc, (v1, v2)| {
+                acc + (v1.x() * v2.y()) - (v1.y() * v2.x())
+            }).abs() * 0.5
     }
 }
 
