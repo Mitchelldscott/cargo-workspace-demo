@@ -1,0 +1,4 @@
+[alias]
+polygon = "run -p polygon-rs --example polygon"
+pr = "run -p polygon-rs --example polygon --release"
+ptest = "test -p polygon-rs ngon"

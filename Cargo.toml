@@ -1,0 +1,10 @@
+[package]
+name = "cargo_workspace_demo"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = [
+    "polygon-rs",
+    "xtask"
+]

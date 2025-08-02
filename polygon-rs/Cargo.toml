@@ -1,0 +1,4 @@
+[package]
+name = "polygon-rs"
+version = "0.1.0"
+edition = "2024"
