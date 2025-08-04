@@ -1,17 +1,54 @@
 [package]
+edition = "2024"
 name = "cargo_workspace_demo"
 version = "0.1.0"
-edition = "2024"
 
-[workspace]
-members = [
-    "shape-rs",
-    "xtask"
-]
+[profile.bench]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+debug = 2
+debug-assertions = false
+overflow-checks = false
+incremental = false
+
+[profile.dev]
+opt-level = "z"
+codegen-units = 1
+debug = 2
+debug-assertions = true
+overflow-checks = true
+incremental = false
 
 [profile.release]
-debug = false
-opt-level = 3               # Use slightly better optimizations.
-strip = "debuginfo"
-overflow-checks = false     # Disable integer overflow checks.
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+debug = 2
 debug-assertions = false
+overflow-checks = false
+incremental = false
+
+[profile.test]
+opt-level = 3
+codegen-units = 1
+debug = 2
+debug-assertions = true
+overflow-checks = true
+incremental = false
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+test = false
+
+[dependencies]
+cortex-m-rt = "0.7.5"
+panic-halt = "1.0.0"
+
+[workspace]
+resolver = "3"
+members = [
+    "polygon-rs",
+    "xtask",
+]

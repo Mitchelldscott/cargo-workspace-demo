@@ -1,5 +1,21 @@
 [alias]
-shapes = "run -p shape-rs --example shapes"
-pr = "run -p shape-rs --example shapes --release"
-ptest = "test -p shape-rs ngon"
-asm = "objdump -p shape-rs --release --example shapes -- -d --no-show-raw-insn"
+shapes = "run -p polygon-rs --example shapes --release"
+ngon = "test -p polygon-rs ngon"
+asm = "objdump -p polygon-rs --release --example shapes -- -d --no-show-raw-insn"
+emit = "rustc  -p polygon-rs --release --example shapes -- --emit=asm"
+
+rustflags = [
+#    "-C", "linker=flip-link",
+#    "-C", "link-arg=-Tlink.x",
+#    "-C", "link-arg=-Tdefmt.x",
+    # This is needed if your flash or ram addresses are not aligned to 0x10000 in memory.x
+    # See https://github.com/rust-embedded/cortex-m-quickstart/pull/95
+    "-C", "link-arg=--nmagic",
+]
+
+[build]
+# Pick ONE of these compilation targets
+# target = "thumbv6m-none-eabi" # Cortex-M0 and Cortex-M0+
+# target = "thumbv7m-none-eabi" # Cortex-M3
+# target = "thumbv7em-none-eabi" # Cortex-M4 and Cortex-M7 (no FPU)
+target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)
