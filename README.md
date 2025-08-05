@@ -114,7 +114,8 @@ authors = [ "{{authors}}" ]
 ```
 
 ### 5. Implementation with generic HAL selection
-```rust
+Create a file `src/main.rs.liquid`
+```txt
 use {{hal_crate}} as hal;
 
 #[entry]
@@ -150,7 +151,7 @@ $ cat Cargo.toml
 name = "hal-demo"
 version = "0.1.0"
 edition = "2024"
-authors = [ "mdscott" ]
+authors = [ "user name <user email>" ]
 ```
 
 ## Useful Cargo Commands

@@ -49,6 +49,7 @@ panic-halt = "1.0.0"
 [workspace]
 resolver = "3"
 members = [
-    "polygon-rs", "templates/demo-template",
+    "templates/demo-template",
+    "polygon-rs",
     "xtask",
 ]
