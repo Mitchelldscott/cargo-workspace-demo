@@ -11,7 +11,7 @@ cargo new --lib project_name
 
 Will create the following files
 
-```text
+```pgsql
 project_name/
 ├── Cargo.toml
 └── src/
@@ -60,6 +60,99 @@ indexed and for documentation to appear on [docs.rs](https://docs.rs/).
 To update publish a new version update the `version` value in the `Cargo.toml`. Make sure to follow the
 [SemVer Rules](https://doc.rust-lang.org/cargo/reference/semver.html).
 
+## Cargo Generate
+
+[Cargo Generate Book](https://cargo-generate.github.io/cargo-generate/index.html)
+
+This is a minimal template for building a cargo project with variable hal dependency.
+
+### 1. Template setup
+
+```pgsql
+demo-template/
+├── cargo-generate.toml
+├── Cargo.toml
+├── .cargo/config.toml
+└── README.md
+```
+
+### 2. Create a cargo-generate.toml
+
+```toml
+[template]
+description = "A Cargo workspace for embedded targets"
+
+[placeholders.hal_crate] 
+type = "string"
+prompt = "Select a HAL"
+choices = ["stm32f4xx-hal", "imxrt-hal", "rp2040-hal"]
+default = "stm32f4xx-hal"
+
+[hooks]
+post = "add_hal.rhai"
+```
+
+### 3. Implement a post-script to add the hal
+
+```rhai
+let hal = values.hal_crate;
+
+print("Adding HAL crate: " + hal);
+let result = system::command("cargo", ["add", hal]);
+
+print(result);
+```
+
+### 4. In the workspace manifest
+
+```toml
+[package]
+name = "{{project-name}}"
+version = "0.1.0"
+edition = "2024"
+authors = [ "{{authors}}" ]
+```
+
+### 5. Implementation with generic HAL selection
+```rust
+use {{hal_crate}} as hal;
+
+#[entry]
+fn main() {
+    // Setup peripherals, clocks, etc. using hal
+}
+```
+
+### 6. Generate a workspace
+
+````bash
+cargo generate \
+  git@github.com/mitchelldscott/cargo-workspace-demo \
+  templates/demo-template \
+  -d hal_crate=imxrt-hal \
+  --name hal-demo
+````
+
+```bash
+$ cd hal-demo
+$ cat src/main.rs 
+#![no-std]
+#![no-main]
+
+use imxrt-hal as hal;
+
+#[unsafe(no_mangle)]
+pub extern "C" fn _start() -> ! {
+    
+}
+$ cat Cargo.toml 
+[package]
+name = "hal-demo"
+version = "0.1.0"
+edition = "2024"
+authors = [ "mdscott" ]
+```
+
 ## Useful Cargo Commands
 
 [Cargo Commands](https://doc.rust-lang.org/cargo/commands/build-commands.html)
@@ -69,7 +162,7 @@ To update publish a new version update the `version` value in the `Cargo.toml`. 
 [Rust-lang: Automated Tests](https://doc.rust-lang.org/book/ch11-00-testing.html)
 [Rust-lang: Cargo test](https://doc.rust-lang.org/cargo/reference/cargo-targets.html#tests)
 
-Cargo provides multiple ways to test code: unit, integration, and doc tests.
+Cargo provides multiple ways to test code: unit, integration and doc tests.
 
 Run all functions marked with `#[test]` in the crate:
 
@@ -151,7 +244,7 @@ Format all source code:
 cargo fmt
 ```
 
-Check if code is formatted properly:
+Check if the code is formatted properly:
 
 ```bash
 cargo fmt -- --check

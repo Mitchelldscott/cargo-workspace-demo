@@ -1,3 +1,11 @@
 [template]
-description = "A minimal Cargo workspace for embedded/sim targets"
-placeholders.hal_crate = { type = "string", prompt = "Select a HAL", choices = ["stm32f4xx-hal", "imxrt-hal", "rp2040-hal"], default = "stm32f4xx-hal" }
+description = "A Cargo workspace for embedded targets"
+
+[placeholders.hal_crate]
+type = "string"
+prompt = "Select a HAL"
+choices = ["stm32f4xx-hal", "imxrt-hal", "rp2040-hal"]
+default = "stm32f4xx-hal"
+
+[hooks]
+post = ["add-hal.rhai"]

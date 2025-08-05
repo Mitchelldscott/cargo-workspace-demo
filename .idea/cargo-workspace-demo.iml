@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/firmware-rs/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/my-app/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/my-app/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/templates/demo-template/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/polygon-rs/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
