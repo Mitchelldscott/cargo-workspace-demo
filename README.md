@@ -128,7 +128,7 @@ fn main() {
 
 ````bash
 cargo generate \
-  git@github.com/mitchelldscott/cargo-workspace-demo \
+  https://github.com/mitchelldscott/cargo-workspace-demo \
   templates/demo-template \
   -d hal_crate=imxrt-hal \
   --name hal-demo
