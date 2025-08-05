@@ -8,4 +8,4 @@ choices = ["stm32f4xx-hal", "imxrt-hal", "rp2040-hal"]
 default = "stm32f4xx-hal"
 
 [hooks]
-pre = ["add-hal.rhai"]
+post = ["add-hal.rhai"]
