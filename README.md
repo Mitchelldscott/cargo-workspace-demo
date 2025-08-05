@@ -95,7 +95,7 @@ post = "add_hal.rhai"
 ### 3. Implement a post-script to add the hal
 
 ```rhai
-let hal = values.hal_crate;
+let hal = variable::get("hal_crate");
 
 print("Adding HAL crate: " + hal);
 let result = system::command("cargo", ["add", hal]);
