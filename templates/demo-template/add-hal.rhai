@@ -1,5 +1,6 @@
 let hal = variable::get("hal_crate");
 
+print(system::command("pwd", []));
 print(system::command("ls", []));
 
 print("Adding HAL crate: " + hal);
