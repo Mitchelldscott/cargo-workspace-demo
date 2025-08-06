@@ -62,11 +62,13 @@ To update publish a new version update the `version` value in the `Cargo.toml`. 
 
 ## Cargo Generate
 
-[Cargo Generate Book](https://cargo-generate.github.io/cargo-generate/index.html)
+* [Cargo Generate Book](https://cargo-generate.github.io/cargo-generate/index.html)
+* [Knurling app template](https://github.com/knurling-rs/app-template)
+
 
 This is a minimal template for building a cargo project with variable hal dependency.
 
-### 1. Template setup
+### Template setup
 
 ```pgsql
 demo-template/
@@ -76,7 +78,7 @@ demo-template/
 └── README.md
 ```
 
-### 2. Create a cargo-generate.toml
+### 1. Create a cargo-generate.toml
 
 ```toml
 [template]
@@ -92,18 +94,16 @@ default = "stm32f4xx-hal"
 post = "add_hal.rhai"
 ```
 
-### 3. Implement a post-script to add the hal
+### 2. Implement a post-script to add the hal
 
 ```rhai
 let hal = variable::get("hal_crate");
 
 print("Adding HAL crate: " + hal);
-let result = system::command("cargo", ["add", hal]);
-
-print(result);
+print(system::command("cargo", ["add", hal]));
 ```
 
-### 4. In the workspace manifest
+### 3. In the workspace manifest
 
 ```toml
 [package]
@@ -113,20 +113,24 @@ edition = "2024"
 authors = [ "{{authors}}" ]
 ```
 
-### 5. Implementation with generic HAL selection
+### 4. Implementation with generic HAL selection
 Create a file `src/main.rs.liquid`
 ```txt
+#![no-std]
+#![no-main]
+
 use {{hal_crate}} as hal;
 
-#[entry]
-fn main() {
-    // Setup peripherals, clocks, etc. using hal
+#[unsafe(no_mangle)]
+pub extern "C" fn _start() -> ! {
+    
 }
 ```
 
-### 6. Generate a workspace
+### 5. Generate a workspace
 
 ````bash
+cargo install cargo-generate
 cargo generate \
   --git git@github.com:mitchelldscott/cargo-workspace-demo \
   templates/demo-template \
@@ -152,6 +156,9 @@ name = "hal-demo"
 version = "0.1.0"
 edition = "2024"
 authors = [ "user name <user email>" ]
+
+[dependencies]
+imxrt_hal = "0.5.11"
 ```
 
 ## Useful Cargo Commands
