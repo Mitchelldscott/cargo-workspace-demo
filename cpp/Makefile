@@ -1,8 +1,8 @@
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
-CFLAGS = -nostdlib -mcpu=cortex-m7 -mfloat-abi=hard -mno-unaligned-access -std=c11 -Wall -Wextra -O3
+CFLAGS = -nostdlib -mcpu=cortex-m4 -mfloat-abi=hard -mthumb -mfpu=fpv4-sp-d16 -mno-unaligned-access -std=c11 -Wall -Wextra -O3 -T linker.ld
 
-SRC = main.c
+SRC = startup.c main.c
 OUT = main
 DISASM = main.s
 

@@ -1,4 +1,5 @@
 #include <stdint.h>
+
 typedef float float32_t;
 
 // https://developer.arm.com/documentation/102467/0201/Example---matrix-multiplication
@@ -13,8 +14,7 @@ void matrix_multiply_c(float32_t *A, float32_t *B, float32_t *C, uint32_t n, uin
     }
 }
 
-
-void _start(void) {
+int main(void) {
     const uint32_t n = 3;  // Rows of A and C
     const uint32_t m = 2;  // Columns of B and C
     const uint32_t k = 4;  // Columns of A and Rows of B
@@ -40,4 +40,13 @@ void _start(void) {
     matrix_multiply_c(A, B, C, n, m, k);
 
     while (1);
+    return 0;
+}
+
+void Reset_Handler(void) {
+    main();
+}
+
+void Default_Handler(void) {
+    while(1);
 }
