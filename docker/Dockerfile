@@ -4,38 +4,48 @@ FROM ubuntu:24.04
 LABEL maintainer="scott.mitchell913@gmail.com"
 LABEL description="Docker image for cross-building C code for ARM Cortex-M targets"
 
-# Update base packages and install dependencies
-RUN apt update && apt install -y \
+# Avoid interactive apt prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install base build tools, QEMU, and dependencies
+RUN apt-get update && apt-get install -y \
     build-essential \
-    gcc \
-    make \
-    cmake \
-    ninja-build \
-    git \
     curl \
-    wget \
+    pkg-config \
+    libssl-dev \
+    pkg-config \
     python3 \
     python3-pip \
-    libusb-1.0-0-dev \
-    libtool \
-    pkg-config \
     gdb-multiarch \
     ca-certificates \
+    qemu-system-arm \
+    qemu-system-misc \
+    qemu-system-riscv64 \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Rust via rustup
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+    | sh -s -- -y --default-toolchain stable
+
+# Make cargo/rustup available in PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Install Rust targets for bare-metal/QEMU
+RUN rustup target add \
+    riscv64gc-unknown-none-elf \
+    thumbv7em-none-eabihf
+
+RUN rustup component add llvm-tools
+
+# Install useful Cargo tools
+RUN cargo install \
+    cargo-binutils
 
 # Install GNU Arm Embedded Toolchain (latest official release)
 RUN apt update && apt install -y gcc-arm-none-eabi gdb-arm-none-eabi binutils-arm-none-eabi
 
-# Optional: Install OpenOCD for flashing/debugging
-RUN apt update && apt install -y openocd
-
 # Create a working directory
 WORKDIR /home/dev
-
-# Set environment variables for convenience
-ENV CC=arm-none-eabi-gcc
-ENV OBJDUMP=arm-none-eabi-objdump
-ENV CFLAGS="-mcpu=cortex-m4 -mthumb -O3"
 
 # Set entrypoint (optional)
 CMD ["/bin/bash"]

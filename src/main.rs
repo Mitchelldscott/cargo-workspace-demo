@@ -22,10 +22,6 @@ fn matrix_multiply(a: &[f32], b: &[f32], c: &mut [f32], n: usize, m: usize, k: u
     }
 }
 
-// main();
-// loop {}
-// }
-// fn main() -> ! {
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
     // Define the dimensions of the matrices

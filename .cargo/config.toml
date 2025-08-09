@@ -1,8 +1,7 @@
 [alias]
 shapes = "run -p polygon-rs --example shapes --release"
 ngon = "test -p polygon-rs ngon"
-asm = "objdump -p polygon-rs --release --example shapes -- -d --no-show-raw-insn"
-emit = "rustc  -p polygon-rs --release --example shapes -- --emit=asm"
+asm = "objdump --release -- -d --no-show-raw-insn"
 
 rustflags = [
 #    "-C", "linker=flip-link",
@@ -18,4 +17,4 @@ rustflags = [
 # target = "thumbv6m-none-eabi" # Cortex-M0 and Cortex-M0+
 # target = "thumbv7m-none-eabi" # Cortex-M3
 # target = "thumbv7em-none-eabi" # Cortex-M4 and Cortex-M7 (no FPU)
-#target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)
+target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)

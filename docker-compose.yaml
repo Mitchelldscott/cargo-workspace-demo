@@ -1,0 +1,17 @@
+services:
+  base:
+    build:
+      context: docker
+      dockerfile: Dockerfile
+    image: mdsdev0/rust-gcc-qemu:2025.08
+  dev:
+    extends: base
+    volumes:
+      - ./.:/home/dev/
+  rust:
+    extends: dev
+    command: cargo asm
+  cpp:
+    extends: dev
+    command: make disasm
+    working_dir: /home/dev/cpp
