@@ -43,12 +43,9 @@ path = "src/main.rs"
 test = false
 
 [dependencies]
-#cortex-m-rt = "0.7.5"
-#panic-halt = "1.0.0"
 
 [workspace]
 members = [
     "polygon-rs",
-#    "xtask",
 ]
 resolver = "3"

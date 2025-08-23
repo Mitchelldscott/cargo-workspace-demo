@@ -1,112 +1,103 @@
-//! # Crate-level documentation
-//! _This will appear on the main page of the docs_
-//!
-//! A text file can be included in the docs using `#![doc = include_str!("../../README.md")]`
-#![doc = include_str!("../../README.md")]
+use core::marker::PhantomData;
+use core::ops::{Add, Sub, Mul, Div};
 
-#![no_std]
-
-// Clippy docs: https://doc.rust-lang.org/clippy/usage.html
-#![deny(
-    clippy::all,
-    clippy::todo,
-    clippy::panic,
-    clippy::style,
-    clippy::nursery,
-    clippy::pedantic,
-    clippy::suspicious,
-    clippy::complexity,
-    clippy::unwrap_used,
-    clippy::expect_used,
-    clippy::unimplemented
-)]
-#![warn(unused, rust_2018_idioms)]
-
-pub trait Vertex {
-    fn x(&self) -> f32;
-    fn y(&self) -> f32;
+pub trait RealNumber: Sized + Add<Output=Self> + Sub<Output=Self> + Mul<Output=Self> + Div<Output=Self> {
+    const ZERO: Self;
+    const ONE: Self;
+    const TWO: Self;
+    fn abs(self) -> Self;
 }
 
-impl<T> Vertex for [T; 2] 
-where 
-    T: Copy,
-    f32: From<T>,
-{
-    fn x(&self) -> f32 { self[0].into() }
-    fn y(&self) -> f32 { self[1].into() }
+impl RealNumber for f32 {
+    const ZERO: Self = 0.0;
+    const ONE: Self = 1.0;
+    const TWO: Self = 2.0;
+    fn abs(self) -> Self {
+        Self::abs(self)
+    }
 }
-
-impl<T> Vertex for (T, T)
-where 
-    T: Copy,
-    f32: From<T>,
-{
-    fn x(&self) -> f32 { self.0.into() }
-    fn y(&self) -> f32 { self.1.into() }
-}
-
-pub trait Polygon {
-    type V: Vertex;
-    fn vertices(&self) -> &[Self::V];
-    fn area(&self) -> f32 {
-        let vertices = self.vertices();
-        if vertices.len() < 3 { return 0.0; }
+pub trait Area2D<T: Copy + RealNumber, const N: usize> {
+    fn area(x: [T; N], y: [T; N]) -> T {
+        if N < 3 { return T::ZERO; }
         // Apply the Shoelace formula.
         // https://mathworld.wolfram.com/ShoelaceFormula.html
-        (0..vertices.len())
-            .map(|i| (&vertices[i], &vertices[(i + 1) % vertices.len()]))
-            .fold(0.0, |acc, (v1, v2)| {
-                acc + (v1.x() * v2.y()) - (v1.y() * v2.x())
+        (0..N)
+            .map(|i| (i, (i + 1) % N))
+            .fold(T::ZERO, |acc, (v1, v2)| {
+                acc + (x[v1] * y[v2]) - (x[v2] * y[v1])
             })
             .abs()
-            / 2.0
+            / T::TWO
     }
 }
 
-// #[cfg(test)]
-// mod ngon_test {
-//     use super::*;
+pub struct DefaultSubprograms;
+impl<T: Copy + RealNumber, const N: usize> Area2D<T, N> for DefaultSubprograms {}
 
-//     pub struct CCWNgon<const N: usize>([[f32; 2]; N]);
+pub struct Polygon2D<T, const N: usize, A=DefaultSubprograms> {
+    pub vertices_x: [T; N],
+    pub vertices_y: [T; N],
+    _phantom: PhantomData<A>,
+}
 
-//     impl<const N: usize> Polygon for CCWNgon<N> {
-//         type V = [f32; 2];
-//         fn vertices(&self) -> &[Self::V] {
-//             &self.0
-//         }
-//     }
+impl<T, const N: usize, A> Polygon2D<T, N, A> {
+    pub const fn new(vertices_x: [T; N], vertices_y: [T; N]) -> Self {
+        Self {
+            vertices_x,
+            vertices_y,
+            _phantom: PhantomData,
+        }
+    }
+}
 
-//     pub struct CWNgon<const N: usize>([(f32, f32); N]);
+impl<T: Copy + RealNumber, const N: usize, A: Area2D<T, N>> Polygon2D<T, N, A> {
+    pub fn area(&self) -> T {
+        A::area(self.vertices_x, self.vertices_y)
+    }
+}
 
-//     impl<const N: usize> Polygon for CWNgon<N> {
-//         type V = (f32, f32);
-//         fn vertices(&self) -> &[Self::V] {
-//             &self.0
-//         }
-//     }
+pub struct Squarea;
+impl<T: Copy + RealNumber> Area2D<T, 4> for Squarea {
+    fn area(xs: [T; 4], ys: [T; 4]) -> T {
+        ((xs[0] * ys[1] - xs[1] * ys[0])
+            + (xs[1] * ys[2] - xs[2] * ys[1])
+            + (xs[2] * ys[3] - xs[3] * ys[2])
+            + (xs[3] * ys[0] - xs[0] * ys[3])).abs()
+            / T::TWO
+    }
+}
+pub type Square<T, Area2D=Squarea> = Polygon2D<T, 4, Area2D>;
 
-//     #[test]
-//     fn ccw_vs_cw() {
-//         let ccw_ngon = CCWNgon([
-//             [0.0, 0.0],
-//             [0.5, 0.25],
-//             [1.0, 0.0],
-//             [0.75, 0.5],
-//             [1.0, 1.0],
-//             [0.5, 0.75],
-//             [0.0, 1.0],
-//             [0.25, 5.0],
-//         ]);
-//         let cw_ngon = CWNgon([
-//             (0.0, 0.0),
-//             (0.25, 5.0),
-//             (0.0, 1.0),
-//             (0.5, 0.75),
-//             (1.0, 1.0),
-//             (0.75, 0.5),
-//             (1.0, 0.0),
-//             (0.5, 0.25),
-//         ]);
-//         assert_eq!(ccw_ngon.area(), cw_ngon.area(), "Incorrect ngon area");
-//     }
-// }
+pub struct UnitShape<T>(PhantomData<T>);
+impl<T: Copy + RealNumber, const N: usize> Area2D<T, N> for UnitShape<T> {
+    fn area(_xs: [T; N], _ys: [T; N]) -> T {
+        T::ONE
+    }
+}
+
+#[cfg(test)]
+mod square_tests {
+    use super::*;
+
+    #[test]
+    #[allow(clippy::similar_names, clippy::float_cmp)]
+    #[inline(never)]
+    fn test_area() {
+        let cw_square: Square<f32> = Square::new(
+            [1.0, 2.0, 2.0, 1.0],
+            [1.0, 1.0, 0.0, 0.0]
+        );
+        let ccw_square: Square<f32, UnitShape<f32>> = Square::new(
+            [0.0, 1.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0, 1.0]
+        );
+        let polygon: Polygon2D<f32, 4, DefaultSubprograms> = Polygon2D::new(
+            [1.0, 2.0, 2.0, 1.0],
+            [1.0, 1.0, 0.0, 0.0],
+        );
+
+        assert_eq!(cw_square.area(), ccw_square.area());
+        assert_eq!(cw_square.area(), polygon.area());
+        assert_eq!(cw_square.area(), UnitShape::area([0.0], [0.0]));
+    }
+}
